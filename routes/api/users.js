@@ -28,68 +28,88 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     errors = {};
+
+    if (req.user.id === req.params.userId) {
+      errors.frozen = "Freeze yourself not allowed";
+      return res.status(403).json(errors);
+    }
+
     User.findById(req.params.userId)
       .then(user => {
-        if (!user) {
-          errors.user = "No user with that id";
-          res.status(404).json(errors);
-        } else {
-          const updateUser = () => {
-            User.update(
-              { _id: req.params.userId },
-              {
-                $set: {
-                  frozen: {
-                    to: Date.now() + Number(req.body.to),
-                    by: req.user.id,
-                    description: req.body.description
-                  }
-                }
-              },
-              { new: true }
-            ).then(() => {
-              res.json({ success: true });
-            });
-          };
-          if (user.frozen) {
-            if (user.frozen.to < Date.now()) {
-              new FrozenHistory({
-                by: req.user.id,
+        const updateUser = () => {
+          User.findByIdAndUpdate(
+            req.params.userId,
+            {
+              $set: {
                 frozen: {
-                  user: user.id.toString(),
-                  from: user.frozen.from,
-                  to: user.frozen.to,
-                  by: user.frozen.by,
-                  description: user.frozen.description
+                  to: Date.now() + Number(req.body.to),
+                  by: req.user.id,
+                  description: req.body.description
                 }
-              })
-                .save()
-                .then(() => {
-                  updateUser();
-                });
-            }
+              }
+            },
+            { new: true }
+          ).then(user => {
+            res.json(user);
+          });
+        };
+        if (user.frozen) {
+          if (user.frozen.to < Date.now()) {
+            new FrozenHistory({
+              by: req.user.id,
+              frozen: {
+                user: user.id.toString(),
+                from: user.frozen.from,
+                to: user.frozen.to,
+                by: user.frozen.by,
+                description: user.frozen.description
+              }
+            })
+              .save()
+              .then(() => {
+                updateUser();
+              });
           }
-          updateUser();
         }
+        updateUser();
       })
       .catch(err => {
         if (err.name === "CastError") {
           errors.user = "No user with that id";
           res.status(404).json(errors);
         } else {
-          errors.internalServerError = "Internal server error";
-          res.status(500).json(errors); //TODO:
+          errors.internalServerError = `Internal server error: ${err.name} ${
+            err.message
+          }`;
+          res.status(500).json(errors);
         }
+      });
+  }
+);
+
+// @route  GET api/users
+// @desc   Get all users
+// @access Private
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    errors = {};
+    User.find()
+      .then(users => {
+        res.json(users);
+      })
+      .catch(err => {
+        errors.internalServerError = `Internal server error: ${err.name} ${
+          err.message
+        }`;
+        res.status(500).json(errors);
       });
   }
 );
 
 // @route  GET api/users/current/logout
 // @desc   Logout current user
-// @access Private
-
-// @route  GET api/users
-// @desc   Get all users
 // @access Private
 
 module.exports = router;

@@ -16,17 +16,19 @@ const Comment = new Schema({
         user: {
           type: String,
           required: true
-        },
-        from: {
-          type: Date,
-          required: true
         }
       }
     ]
   },
-  from: {
-    type: Date,
-    required: true
+  dislikes: {
+    type: [
+      {
+        user: {
+          type: String,
+          required: true
+        }
+      }
+    ]
   }
 });
 

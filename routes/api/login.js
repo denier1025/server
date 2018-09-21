@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const FrozenHistory = mongoose.model("FrozenHistory");
 const keys = require("../../config/keys");
@@ -31,8 +31,8 @@ router.post("/", (req, res) => {
         // Check password
         bcryptjs.compare(req.body.password, user.password).then(isMatch => {
           if (isMatch) {
-            if(user.frozen) {
-              if(!(user.frozen.to < Date.now())) {
+            if (user.frozen) {
+              if (!(user.frozen.to < Date.now())) {
                 errors.frozen = {
                   message: "Your account is frozen",
                   from: user.frozen.from,
@@ -50,17 +50,19 @@ router.post("/", (req, res) => {
                     by: user.frozen.by,
                     description: user.frozen.description
                   }
-                }).save().then(() => {
-                  User.update(
-                    { _id: user.id },
-                    {
-                      $set: {
-                        frozen: null
-                      }
-                    },
-                    { new: true }
-                  )
                 })
+                  .save()
+                  .then(() => {
+                    User.update(
+                      { _id: user.id },
+                      {
+                        $set: {
+                          frozen: null
+                        }
+                      },
+                      { new: true }
+                    );
+                  });
               }
             }
             // User Matched
@@ -88,8 +90,10 @@ router.post("/", (req, res) => {
       }
     })
     .catch(err => {
-      errors.internalServerError = "Internal server error";
-      res.status(500).json(errors); //TODO: can't: 'connect&findUserField', compare passwords, sign token
+      errors.internalServerError = `Internal server error: ${err.name} ${
+        err.message
+      }`;
+      res.status(500).json(errors);
     });
 });
 

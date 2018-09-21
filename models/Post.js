@@ -30,10 +30,6 @@ const PostSchema = new Schema({
         contentType: {
           type: String,
           required: true
-        },
-        from: {
-          type: Date,
-          default: Date.now
         }
       }
     ]
@@ -45,10 +41,17 @@ const PostSchema = new Schema({
           type: Schema.Types.ObjectId,
           required: true,
           ref: "User"
-        },
-        from: {
-          type: Date,
-          default: Date.now
+        }
+      }
+    ]
+  },
+  dislikes: {
+    type: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: "User"
         }
       }
     ]
@@ -74,17 +77,20 @@ const PostSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 required: true,
                 ref: "User"
-              },
-              from: {
-                type: Date,
-                default: Date.now
               }
             }
           ]
         },
-        from: {
-          type: Date,
-          default: Date.now
+        dislikes: {
+          type: [
+            {
+              user: {
+                type: Schema.Types.ObjectId,
+                required: true,
+                ref: "User"
+              }
+            }
+          ]
         }
       }
     ]
