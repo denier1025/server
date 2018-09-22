@@ -1,14 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Post = new Schema({
+const Comment = new Schema({
   user: {
     type: String,
     required: true
   },
-  title: {
-    type: String,
-    requires: true
+  post: {
+    type: String
+  },
+  comment: {
+    type: String
   },
   text: {
     type: String,
@@ -40,14 +42,14 @@ const Post = new Schema({
   }
 });
 
-const PostHistorySchema = new Schema({
+const CommentHistorySchema = new Schema({
   by: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User"
   },
-  post: {
-    type: Post,
+  comment: {
+    type: Comment,
     required: true
   },
   from: {
@@ -56,4 +58,4 @@ const PostHistorySchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("PostHistory", PostHistorySchema);
+module.exports = mongoose.model("CommentHistory", CommentHistorySchema);

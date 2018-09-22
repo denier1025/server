@@ -1,23 +1,27 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PostSchema = new Schema({
+const ImageSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User"
   },
-  title: {
-    type: String,
-    requires: true,
-    min: 16,
-    max: 256
+  post: {
+    type: Schema.Types.ObjectId,
+    ref: "Post"
   },
-  text: {
+  comment: {
+    type: Schema.Types.ObjectId,
+    ref: "Comment"
+  },
+  image: {
+    type: Buffer,
+    required: true
+  },
+  contentType: {
     type: String,
-    requires: true,
-    min: 256,
-    max: 2500
+    required: true
   },
   likes: {
     type: [
@@ -47,4 +51,4 @@ const PostSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model("Image", ImageSchema);

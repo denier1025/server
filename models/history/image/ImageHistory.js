@@ -1,12 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Comment = new Schema({
+const Image = new Schema({
   user: {
     type: String,
     required: true
   },
-  text: {
+  post: {
+    type: String
+  },
+  comment: {
+    type: String
+  },
+  image: {
+    type: Buffer,
+    required: true
+  },
+  contentType: {
     type: String,
     required: true
   },
@@ -29,17 +39,21 @@ const Comment = new Schema({
         }
       }
     ]
+  },
+  from: {
+    type: Date,
+    required: true
   }
 });
 
-const CommentHistorySchema = new Schema({
+const ImageHistorySchema = new Schema({
   by: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User"
   },
-  comment: {
-    type: Comment,
+  post: {
+    type: Image,
     required: true
   },
   from: {
@@ -48,4 +62,4 @@ const CommentHistorySchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("CommentHistory", CommentHistorySchema);
+module.exports = mongoose.model("ImageHistory", ImageHistorySchema);

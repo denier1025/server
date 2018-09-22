@@ -54,7 +54,6 @@ const Frozen = new Schema({
   }
 });
 
-//Create UserSchema
 const UserSchema = new Schema({
   username: {
     type: String,

@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const FrozenHistory = mongoose.model("FrozenHistory");
 
+// Validator
+const isEmpty = require("../validation/isEmpty");
+
 // @route  GET api/users/current
 // @desc   Return current user
 // @access Private
@@ -20,55 +23,60 @@ router.get(
     })
 );
 
-// @route  Freeze api/users/:userId
+// @route  Freeze api/users/:id
 // @desc   Freeze user
 // @access Private
 router.post(
-  "/:userId",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     errors = {};
 
-    if (req.user.id === req.params.userId) {
+    if (req.user.id === req.params.id) {
       errors.frozen = "Freeze yourself not allowed";
       return res.status(403).json(errors);
     }
 
-    User.findById(req.params.userId)
+    User.findById(req.params.id)
       .then(user => {
-        const updateUser = () => {
-          User.findByIdAndUpdate(
-            req.params.userId,
-            {
-              $set: {
-                frozen: {
-                  to: Date.now() + Number(req.body.to),
-                  by: req.user.id,
-                  description: req.body.description
+        if (isEmpty(user)) {
+          errors.user = "No user with that id";
+          res.status(404).json(errors);
+        } else {
+          const updateUser = () => {
+            User.findByIdAndUpdate(
+              req.params.id,
+              {
+                $set: {
+                  frozen: {
+                    to: Date.now() + Number(req.body.to),
+                    by: req.user.id,
+                    description: req.body.description
+                  }
                 }
-              }
-            },
-            { new: true }
-          ).then(user => {
-            res.json(user);
-          });
-        };
-        if (user.frozen) {
-          if (user.frozen.to < Date.now()) {
-            new FrozenHistory({
-              by: req.user.id,
-              frozen: {
-                user: user.id.toString(),
-                from: user.frozen.from,
-                to: user.frozen.to,
-                by: user.frozen.by,
-                description: user.frozen.description
-              }
-            })
-              .save()
-              .then(() => {
-                updateUser();
-              });
+              },
+              { new: true }
+            ).then(user => {
+              res.json(user);
+            });
+          };
+          if (user.frozen) {
+            if (user.frozen.to < Date.now()) {
+              new FrozenHistory({
+                by: req.user.id,
+                frozen: {
+                  user: user.id.toString(),
+                  from: user.frozen.from,
+                  to: user.frozen.to,
+                  by: user.frozen.by,
+                  description: user.frozen.description
+                }
+              })
+                .save()
+                .then(() => {
+                  updateUser();
+                });
+            }
           }
         }
         updateUser();
