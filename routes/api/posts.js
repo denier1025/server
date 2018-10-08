@@ -3,7 +3,6 @@ const Post = require("mongoose").model("Post");
 const PostHistory = require("mongoose").model("PostHistory");
 const passport = require("passport");
 
-// Validators
 const validatePostInput = require("../validation/post");
 const isEmpty = require("../validation/isEmpty");
 
@@ -76,7 +75,8 @@ router.post(
     const newPost = new Post({
       user: req.user.id,
       title: req.body.title,
-      text: req.body.text
+      text: req.body.text,
+      tags: req.body.tags
     });
 
     newPost
@@ -116,6 +116,7 @@ router.delete(
                 user: post.user,
                 title: post.title,
                 text: post.text,
+                tags: post.tags,
                 likes: post.likes,
                 dislikes: post.dislikes,
                 from: post.from

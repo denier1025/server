@@ -8,8 +8,8 @@ module.exports = function validateCommentInput(data) {
 
   if (Validator.isEmpty(data.text)) {
     errors.text = "Text field is required";
-  } else if(!Validator.isLength(data.text, { min: 16, max: 256 })) {
-    errors.text = "Text must be between 16 and 256 characters";
+  } else if(!Validator.isLength(data.text, { min: 8, max: 256 })) {
+    errors.text = "Text must be between 8 and 256 characters";
   }
 
   return {

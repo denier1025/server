@@ -1,10 +1,11 @@
 const Validator = require("validator");
 const isEmpty = require("./isEmpty");
 
-module.exports = function validatePostInput(data) {
+module.exports = function validateNewsInput(data) {
   const errors = {};
 
   data.title = !isEmpty(data.title) ? data.title : "";
+  data.subtitle = !isEmpty(data.subtitle) ? data.subtitle : "";
   data.text = !isEmpty(data.text) ? data.text : "";
   data.tags = !isEmpty(data.tags) ? data.tags : "";
 
@@ -12,6 +13,12 @@ module.exports = function validatePostInput(data) {
     errors.title = "Title field is required";
   } else if(!Validator.isLength(data.title, { min: 16, max: 128 })) {
     errors.title = "Title must be between 16 and 128 characters";
+  }
+
+  if (Validator.isEmpty(data.subtitle)) {
+    errors.subtitle = "Subtitle field is required";
+  } else if(!Validator.isLength(data.subtitle, { min: 64, max: 512 })) {
+    errors.subtitle = "Subtitle must be between 64 and 512 characters";
   }
 
   if (Validator.isEmpty(data.text)) {

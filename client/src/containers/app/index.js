@@ -5,7 +5,6 @@ import "./index.css";
 import Navbar from "../header";
 import Footer from "../footer";
 import Landing from "../landing";
-
 import Register from "../auth/register";
 import Login from "../auth/login";
 
@@ -16,10 +15,8 @@ class App extends Component {
         <div>
           <Navbar />
           <Route exact path="/" component={Landing} />
-          <div className="container">
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-          </div>
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
           <Footer />
         </div>
       </Router>

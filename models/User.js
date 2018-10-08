@@ -59,6 +59,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
     min: 3,
     max: 30
   },
@@ -66,12 +67,14 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
     min: 6,
     max: 50
   },
   password: {
     type: String,
     required: true,
+    trim: true,
     min: 6,
     max: 50
   },

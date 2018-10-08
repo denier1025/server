@@ -14,7 +14,7 @@ const Comment = new Schema({
   },
   text: {
     type: String,
-    requires: true
+    required: true
   },
   likes: {
     type: [

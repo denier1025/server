@@ -3,7 +3,6 @@ const Comment = require("mongoose").model("Comment");
 const CommentHistory = require("mongoose").model("CommentHistory");
 const passport = require("passport");
 
-// Validators
 const validateCommentInput = require("../validation/comment");
 const isEmpty = require("../validation/isEmpty");
 

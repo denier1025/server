@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Post = new Schema({
+const News = new Schema({
   user: {
     type: String,
     required: true
   },
   title: {
+    type: String,
+    required: true
+  },
+  subtitle: {
     type: String,
     required: true
   },
@@ -44,14 +48,14 @@ const Post = new Schema({
   }
 });
 
-const PostHistorySchema = new Schema({
+const NewsHistorySchema = new Schema({
   by: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User"
   },
-  post: {
-    type: Post,
+  News: {
+    type: News,
     required: true
   },
   from: {
@@ -60,4 +64,4 @@ const PostHistorySchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("PostHistory", PostHistorySchema);
+module.exports = mongoose.model("NewsHistory", NewsHistorySchema);

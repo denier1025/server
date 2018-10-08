@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const FrozenHistory = mongoose.model("FrozenHistory");
 
-// Validator
 const isEmpty = require("../validation/isEmpty");
 
 // @route  GET api/users/current

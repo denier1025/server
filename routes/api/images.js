@@ -3,7 +3,6 @@ const Image = require("mongoose").model("Image");
 const ImageHistory = require("mongoose").model("ImageHistory");
 const passport = require("passport");
 
-// Validators
 const validateImageInput = require("../validation/image");
 const isEmpty = require("../validation/isEmpty");
 

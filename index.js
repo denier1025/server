@@ -23,6 +23,7 @@ app.use(passport.initialize());
 /* ### Mongoose models (ODM area) ### */
 require("./models/User");
 require("./models/Post");
+require("./models/News")
 require("./models/Comment")
 require("./models/Image")
 require("./models/history/user/parts/AvatarHistory");
@@ -32,6 +33,7 @@ require("./models/history/user/parts/PasswordHistory");
 require("./models/history/user/parts/PermissionHistory");
 require("./models/history/user/parts/UsernameHistory");
 require("./models/history/post/PostHistory");
+require("./models/history/news/NewsHistory")
 require("./models/history/comment/CommentHistory");
 require("./models/history/image/ImageHistory");
 
@@ -43,6 +45,7 @@ app.use("/api/register", require("./routes/api/register"));
 app.use("/api/login", require("./routes/api/login"));
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/posts", require("./routes/api/posts"));
+app.use("/api/news", require("./routes/api/news"));
 app.use("/api", require("./routes/api/comments"));
 app.use("/api", require("./routes/api/images"));
 

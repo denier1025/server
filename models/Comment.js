@@ -18,8 +18,8 @@ const CommentSchema = new Schema({
   text: {
     type: String,
     requires: true,
-    min: 256,
-    max: 2500
+    min: 8,
+    max: 256
   },
   likes: {
     type: [

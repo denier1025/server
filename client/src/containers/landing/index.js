@@ -1,8 +1,15 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import "./index.css"
+import { PropTypes } from "prop-types";
+import { connect } from "react-redux";
+import { getAllNews } from "../../actions/news";
+import News from "../../components/news";
+import "./index.css";
 
-export default class Landing extends Component {
+class Landing extends Component {
+  componentDidMount() {
+    this.props.getAllNews()
+  }
+
   render() {
     return (
       <div className="landing">
@@ -12,15 +19,10 @@ export default class Landing extends Component {
               <div className="col-md-12 text-center">
                 <h1 className="display-3 mb-4">Computer Literacy Society</h1>
                 <p className="lead">
-                  One plus step for understanding, how in works and what to expect, it's not a magic
+                  One plus step for understanding, how in works and what to
+                  expect, it's not a magic
                 </p>
-                <hr />
-                <Link to="/register" className="btn btn-lg btn-info mr-2">
-                  Sign Up
-                </Link>
-                <Link to="/login" className="btn btn-lg btn-light">
-                  Login
-                </Link>
+                <News news={this.props.news}/>
               </div>
             </div>
           </div>
@@ -29,3 +31,19 @@ export default class Landing extends Component {
     );
   }
 }
+
+Landing.propTypes = {
+  getAllNews: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  news: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  news: state.news
+});
+
+export default connect(
+  mapStateToProps,
+  { getAllNews }
+)(Landing);

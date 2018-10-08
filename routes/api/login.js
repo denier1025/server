@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const FrozenHistory = mongoose.model("FrozenHistory");
 const keys = require("../../config/keys");
+const isEmpty = require("../validation/isEmpty");
 
-// Validator
 const validateLoginInput = require("../validation/login");
 
 // @route  POST api/login
@@ -15,20 +15,16 @@ const validateLoginInput = require("../validation/login");
 router.post("/", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
 
-  // Check validation result
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  // Find user by email
   User.findOne({ email: req.body.email })
     .then(user => {
-      // Check for user
-      if (!user) {
+      if (isEmpty(user)) {
         errors.email = "User not found";
         res.status(404).json(errors);
       } else {
-        // Check password
         bcryptjs.compare(req.body.password, user.password).then(isMatch => {
           if (isMatch) {
             if (user.frozen) {
@@ -65,19 +61,17 @@ router.post("/", (req, res) => {
                   });
               }
             }
-            // User Matched
-            // Create JWT payload
             const payload = {
-              id: user.id
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar
             };
-            // Sign Token
             jwt.sign(
               payload,
               keys.jwtSecretOrKey,
-              { expiresIn: 60 * 60 },
+              { expiresIn: 1 * 60 },
               (err, token) => {
                 res.json({
-                  success: true,
                   token: "Bearer " + token
                 });
               }
@@ -89,10 +83,8 @@ router.post("/", (req, res) => {
         });
       }
     })
-    .catch(err => {
-      errors.internalServerError = `Internal server error: ${err.name} ${
-        err.message
-      }`;
+    .catch(err => { //TODO: logger
+      errors.internalServerError = "Internal server error";
       res.status(500).json(errors);
     });
 });

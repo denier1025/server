@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PostSchema = new Schema({
+const NewsSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -12,6 +12,12 @@ const PostSchema = new Schema({
     required: true,
     min: 16,
     max: 128
+  },
+  subtitle: {
+    type: String,
+    required: true,
+    min: 64,
+    max: 512
   },
   text: {
     type: String,
@@ -51,4 +57,4 @@ const PostSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model("News", NewsSchema);
